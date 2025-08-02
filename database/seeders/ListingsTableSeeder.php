@@ -78,7 +78,7 @@ class ListingsTableSeeder extends Seeder
 
         if (class_exists(\Database\Factories\Core\ListingFactory::class)) {
             Listing::factory()
-                ->count(50)
+                ->count(300)
                 ->create()
                 ->each(function ($listing) {
                     $listing->images()->create([
