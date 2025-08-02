@@ -2,14 +2,24 @@
 
 namespace App\Models\Core;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 
+use App\Models\Core\Image;
+use App\Models\Core\Category;
+use App\Models\Core\Subcategory;
+use App\Models\Core\BusinessHour;
+use App\Models\User;
+use Illuminate\Notifications\Notifiable;
+
 class Listing extends Model
 {
+
+    use HasFactory, Notifiable;
     /**
      * The attributes that are mass assignable.
      *
@@ -114,6 +124,14 @@ class Listing extends Model
     public function scopeActive($query)
     {
         return $query->where('active', true);
+    }
+
+    /**
+     * Scope para anúncios inativos
+     */
+    public function scopeLatest($query)
+    {
+        return $query->orderBy('created_at', 'desc');
     }
 
     /**

@@ -3,6 +3,10 @@
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
+Route::get('/test', function (Request $request) {
+    return response()->json(['message' => 'Web is working']);
+});
+
 Route::get('/', function () {
     return Inertia::render('welcome');
 })->name('home');

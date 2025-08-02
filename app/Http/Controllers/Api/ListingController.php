@@ -12,36 +12,45 @@ class ListingController extends BaseController
 {
     public function index(Request $request)
     {
-        $query = Listing::with(['category', 'subcategory', 'user', 'mainImage'])
-            ->active()
-            ->latest();
+        try {
+            $query = Listing::with(['category', 'subcategory', 'user', 'mainImage'])
+                ->active()
+                ->latest();
 
-        // Filtros
-        if ($request->has('category')) {
-            $query->where('category_id', $request->category);
+            // Filtros
+            if ($request->has('category')) {
+                $query->where('category_id', $request->category);
+            }
+
+            if ($request->has('search')) {
+                $query->where('title', 'like', '%' . $request->search . '%')
+                    ->orWhere('description', 'like', '%' . $request->search . '%');
+            }
+
+            $listings = $query->paginate(10);
+
+            return $this->successResponse($listings);
+        } catch (\Exception $e) {
+            return $this->errorResponse('An error occurred while fetching listings.', $e->getMessage(), 400);
         }
-
-        if ($request->has('search')) {
-            $query->where('title', 'like', '%'.$request->search.'%')
-                  ->orWhere('description', 'like', '%'.$request->search.'%');
-        }
-
-        $listings = $query->paginate(10);
-
-        return $this->successResponse($listings);
     }
 
     public function show($id)
     {
-        $listing = Listing::with([
-            'category',
-            'subcategory',
-            'user',
-            'images',
-            'businessHours'
-        ])->active()->findOrFail($id);
 
-        return $this->successResponse($listing);
+        try {
+            $listing = Listing::with([
+                'category',
+                'subcategory',
+                'user',
+                'images',
+                'businessHours'
+            ])->active()->findOrFail($id);
+
+            return $this->successResponse($listing);
+        } catch (\Exception $e) {
+            return $this->errorResponse('Listing not found.', 404);
+        }
     }
 
     public function store(Request $request)

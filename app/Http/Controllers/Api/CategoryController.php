@@ -9,12 +9,16 @@ class CategoryController extends BaseController
 {
     public function index()
     {
-        $categories = Category::with('subcategories')
-            ->active()
-            ->ordered()
-            ->get();
+        try {
+            $categories = Category::with('subcategories')
+                ->active()
+                ->ordered()
+                ->get();
 
-        return $this->successResponse($categories);
+            return $this->successResponse($categories);
+        } catch (\Exception $e) {
+            return $this->errorResponse('Failed to retrieve categories: ');
+        }
     }
 
     public function withListings()
@@ -24,5 +28,19 @@ class CategoryController extends BaseController
         }])->active()->ordered()->get();
 
         return $this->successResponse($categories);
+    }
+
+    public function show(Category $category)
+    {
+        return $this->successResponse($category);
+    }
+
+    public function showWithListings(Category $category)
+    {
+        $category->load(['subcategories.listings' => function($query) {
+            $query->active()->latest()->limit(4);
+        }]);
+
+        return $this->successResponse($category);
     }
 }

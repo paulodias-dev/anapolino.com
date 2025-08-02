@@ -1,12 +1,13 @@
 <?php
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
-use App\Http\Controllers\Api\ListingController;
 use App\Http\Controllers\Api\CategoryController;
+use App\Http\Controllers\Api\ListingController;
 use App\Http\Controllers\Api\PlanController;
 use App\Http\Controllers\Api\UserController;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
+
 
 Route::prefix('v1')->group(function () {
     // Auth
@@ -14,11 +15,18 @@ Route::prefix('v1')->group(function () {
     Route::post('/login', [AuthController::class, 'login']);
 
     // Public routes
-    Route::get('/listings', [ListingController::class, 'index']);
-    Route::get('/listings/{id}', [ListingController::class, 'show']);
-    Route::get('/categories', [CategoryController::class, 'index']);
-    Route::get('/categories/featured', [CategoryController::class, 'withListings']);
     Route::get('/plans', [PlanController::class, 'index']);
+    Route::get('/plans/{plan}', [PlanController::class, 'show']);
+
+    Route::get('/categories', [CategoryController::class, 'index']);
+    Route::get('/categories/{category}', [CategoryController::class, 'show']);
+    Route::get('/categories/{category}/listings', [CategoryController::class, 'showWithListings']);
+    Route::get('/categories/featured', [CategoryController::class, 'withListings']);
+
+    Route::get('/listings', [ListingController::class, 'index']);
+    Route::get('/listings/{listing}', [ListingController::class, 'show']);
+
+
 
     // Protected routes
     Route::middleware('auth:sanctum')->group(function () {

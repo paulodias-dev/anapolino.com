@@ -32,4 +32,20 @@ class Category extends Model
     {
         return $this->hasManyThrough(Listing::class, Subcategory::class);
     }
+
+    /**
+     * Scope para retornar apenas categorias ativas.
+     */
+    public function scopeActive($query)
+    {
+        return $query->where('active', true);
+    }
+
+    /**
+     * Scope para ordenar as categorias pelo campo 'order'.
+     */
+    public function scopeOrdered($query)
+    {
+        return $query->orderBy('order');
+    }
 }

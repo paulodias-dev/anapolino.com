@@ -12,7 +12,6 @@ class ListingsTableSeeder extends Seeder
 {
     public function run()
     {
-        // Verifica se existem usuários e categorias
         $users = User::all();
         $categories = Category::with('subcategories')->get();
 
@@ -61,7 +60,6 @@ class ListingsTableSeeder extends Seeder
             $user = $users->random();
             $category = $categories->random();
 
-            // Cria o anúncio
             $listing = Listing::create(array_merge($listingData, [
                 'user_id' => $user->id,
                 'category_id' => $category->id,
@@ -70,7 +68,6 @@ class ListingsTableSeeder extends Seeder
                     : null,
             ]));
 
-            // Adiciona imagem principal
             $listing->images()->create([
                 'path' => $index === 0
                     ? 'listings/restaurante-exemplo.jpg'
@@ -79,17 +76,16 @@ class ListingsTableSeeder extends Seeder
             ]);
         }
 
-        // Cria mais anúncios aleatórios se a factory existir
-        // if (class_exists(\Database\Factories\ListingFactory::class)) {
-        //     Listing::factory()
-        //         ->count(5)
-        //         ->create()
-        //         ->each(function ($listing) {
-        //             $listing->images()->create([
-        //                 'path' => 'listings/default-image.jpg',
-        //                 'is_main' => true,
-        //             ]);
-        //         });
-        // }
+        if (class_exists(\Database\Factories\Core\ListingFactory::class)) {
+            Listing::factory()
+                ->count(50)
+                ->create()
+                ->each(function ($listing) {
+                    $listing->images()->create([
+                        'path' => 'listings/default-image.jpg',
+                        'is_main' => true,
+                    ]);
+                });
+        }
     }
 }
