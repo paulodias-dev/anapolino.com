@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\BaseController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\ListingController;
 use App\Http\Controllers\Api\PlanController;
